@@ -1,4 +1,16 @@
-# From Script Tags to Bundlers
+# How to Use
+
+1. Open this folder in a coding agent.
+2. Ask the agent:
+
+   ```text
+   Start the script-tags-to-bundlers journey. Follow AGENTS.md one checkpoint at a time.
+   ```
+
+3. The agent should guide you through the project interactively.
+4. Follow the browser instructions for each checkpoint. The first version opens directly, while the ES Module checkpoints use a local HTTP server.
+
+## From Script Tags to Bundlers
 
 This is a tiny learning project for understanding how a frontend build pipeline appears naturally.
 
@@ -10,18 +22,6 @@ It starts with three plain runtime files:
 
 The point is not to begin with Vite, webpack, Rollup, or any other bundler.
 The point is to feel the pressure that eventually makes a bundler useful.
-
-## How to Use
-
-1. Open this folder in a coding agent.
-2. Ask the agent:
-
-   ```text
-   Start the script-tags-to-bundlers journey. Follow AGENTS.md one checkpoint at a time.
-   ```
-
-3. The agent should guide you through the project interactively.
-4. Follow the browser instructions for each checkpoint. The first version opens directly, while the ES Module checkpoints use a local HTTP server.
 
 ## What You Will Learn
 
