@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>From Script Tags to Bundlers</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Checkpoint 0</p>
+        <h1>Start with HTML, CSS, and one script.</h1>
+        <p>
+          This app intentionally begins before build tools. A coding agent can
+          evolve it step by step until a bundler becomes the obvious next move.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>Current Runtime Files</h2>
+        <ul class="file-list">
+          <li><code>index.html</code><span>HTML entry document</span></li>
+          <li><code>styles.css</code><span>page styling</span></li>
+          <li><code>app.js</code><span>classic browser script</span></li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Try the App</h2>
+        <div class="controls">
+          <button class="button" id="increment" type="button">Increment</button>
+          <button class="button secondary" id="reset" type="button">Reset</button>
+        </div>
+        <p class="note">
+          Right now, all behavior lives in one JavaScript file. CSS is separate
+          because styling is not the dependency problem we are studying yet.
+        </p>
+      </section>
+
+      <section class="status" id="status" aria-live="polite"></section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
