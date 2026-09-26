@@ -32,7 +32,11 @@ An output JavaScript file produced by the build. One source file does not always
 
 ## Tree Shaking
 
-Removing exports that are never imported by the reachable application code.
+Omitting exports and supporting code that a production build can prove are unreachable. Static ESM structure makes that proof more reliable, while observable side effects must be preserved.
+
+## Side Effect
+
+Observable work performed when a module is evaluated rather than when an exported function is later called, such as registering a custom element, changing a global, adding an event listener, or loading global CSS.
 
 ## Code Splitting
 

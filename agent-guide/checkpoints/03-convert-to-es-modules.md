@@ -32,6 +32,41 @@ Edit:
 
 Explain that `type="module"` changes the browser's loading behavior. The browser treats `app.js` as a module entry, parses its imports, and requests each imported module itself. HTML only names the entry file; JavaScript now describes the rest of the dependency graph.
 
+Before discussing the server, pause to explain a second problem that ESM solves: scope.
+
+Classic scripts share a global scope, so two top-level declarations with the same name can collide. Each ES Module instead has its own module scope. Show this small example without adding it to the project:
+
+```js
+// users.js
+export const status = "active";
+export function getUserStatus() {
+  return status;
+}
+```
+
+```js
+// orders.js
+export const status = "paid";
+export function getOrderStatus() {
+  return status;
+}
+```
+
+Both `status` variables are valid because they belong to different module scopes. Top-level module declarations do not automatically become properties on `window`. A conflict can still be created inside one module by importing two values under the same local name; aliases solve that explicitly:
+
+```js
+import { status as userStatus } from "./users.js";
+import { status as orderStatus } from "./orders.js";
+```
+
+Then clarify the relationship between a module and a file:
+
+- In ordinary source code, one imported `.js` file is usually one ES Module, so "module" and "file" often sound interchangeable.
+- A module is really a scoped code unit with its own imports and exports. An inline `<script type="module">` is also a module even though it has no separate file.
+- A source file is one module, but a production output file does not have to correspond to one source module. A future bundler can safely combine code from several modules into one output chunk while preserving their behavior.
+
+Do not explain bundler implementation deeply yet. Tell the learner that Checkpoint 14 will make this many-modules-to-one-chunk mapping visible and show how same-named local bindings remain safe.
+
 Before checking the result, explain the serving requirement:
 
 - A classic script opened from disk can often be read directly as one local file. An ES Module is different: after loading `app.js`, the browser sees `import "./formatters.js"` and performs another module request for that URL.

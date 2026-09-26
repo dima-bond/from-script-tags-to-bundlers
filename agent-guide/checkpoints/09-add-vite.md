@@ -14,6 +14,22 @@ Then explain what Vite is:
 - Vite is not a JavaScript framework like React or Vue. It can be used with those frameworks, but this project uses it with plain HTML, CSS, and JavaScript.
 - Vite is also not a package manager. npm, pnpm, or Yarn installs Vite; Vite then runs the project and builds its frontend assets.
 
+Use this layered model to explain what **coordinates** means:
+
+```text
+package manager
+  -> installs Vite and its dependencies; runs the named script
+
+Vite
+  -> provides one dev/build workflow for HTML, JavaScript, CSS, and assets
+  -> coordinates specialized processors, bundling machinery, and plugins
+
+browser
+  -> receives and executes the resulting standard web files
+```
+
+Vite is the higher-level interface the developer invokes; that does not mean one Vite function personally implements every parser, transformer, bundling algorithm, CSS operation, and optimizer. Its exact internal components can change between versions while the higher-level role remains similar.
+
 Give the alternatives a little context:
 
 - **Parcel** is another integrated build tool with a dev server and production builds, with a strong focus on automatic, low-configuration behavior.

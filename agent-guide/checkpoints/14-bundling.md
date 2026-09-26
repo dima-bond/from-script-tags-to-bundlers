@@ -49,6 +49,16 @@ After inspecting it, make the distinction explicit:
 - Several modules can be linked into one chunk, while dynamic imports can cause other modules to become separate chunks.
 - The readable chunk is being inspected only to reveal that mapping. It is generated evidence, not code the learner should maintain or edit.
 
+Reconnect this to the module-scope explanation from Checkpoint 3. Combining modules into one physical chunk must not turn their separate local bindings into accidental collisions. A bundler tracks which declaration every reference belongs to and can rename bindings, wrap module code, or use another equivalent representation. Show this simplified example:
+
+```text
+SOURCE MODULES                  POSSIBLE LINKED OUTPUT
+users.js:  export const status         const status = "active";
+orders.js: export const status   ->    const status$1 = "paid";
+```
+
+The exact generated names and strategy are tool-dependent. A minifier may later shorten both names further, but it must preserve every reference to the correct value. Physical file boundaries may disappear in a chunk while the behavior of the original module scopes remains intact.
+
 Conclude with the practical reason for this checkpoint: it proves that `vite build` did more than copy or rename files. It changed the developer-friendly module graph into browser-delivery units. Checkpoint 15 will explain why `tips.js` was deliberately not placed in the initial entry chunk.
 
 Next: [Checkpoint 15](15-code-splitting.md)

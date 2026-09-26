@@ -16,7 +16,8 @@ Follow this sequence strictly:
 6. If it is incorrect, correct the misconception directly and explain the right model with a small example or diagram when useful.
 7. Keep feedback focused, but broad enough that the learner can understand the complete answer.
 8. Ask one short follow-up only when a central misconception remains. Otherwise continue to the next numbered question.
-9. Do not provide a score or percentage unless the learner asks for one.
+9. Use qualitative words for the final evaluation. Do not provide points, a numeric score, or a percentage.
+10. Privately track what the learner explained independently and every topic whose initial answer was incomplete, incorrect, or absent. Record the specific missing distinction, not only the question number. Use those notes for the final evaluation; do not interrupt the conversation with scoring after every answer.
 
 After feedback, explicitly ask whether the learner is ready for the next question. Wait before continuing.
 
@@ -53,7 +54,7 @@ A complete answer should cover:
 
 Ask:
 
-> Starting from `index.html`, how can a browser or build tool discover the JavaScript dependency graph, and how does a dynamic import differ from a static import in that graph?
+> In this project, how do the browser and build tool get from `index.html` to the complete JavaScript dependency graph? Compare static imports with dynamic `import()`: when is each dependency needed, what happens to a dynamic import without a bundler, and does it always guarantee a separate generated chunk when a bundler is used?
 
 A complete answer should cover:
 
@@ -61,6 +62,8 @@ A complete answer should cover:
 - static `import` statements declare dependencies that are needed as the module loads
 - following imports recursively produces the dependency graph
 - `import()` also creates a graph edge, but loading can be deferred until the execution path reaches it
+- without a bundler, the browser can request the dynamically imported source module directly when execution reaches `import()`
+- a build tool can use a dynamic-import boundary to create a separate lazy chunk, but the exact chunk layout remains a build decision and can depend on configuration
 - the graph enables later build decisions; it is not itself a bundle
 
 ## Question 4: Transpilation and Polyfills
@@ -108,15 +111,18 @@ A complete answer should cover:
 
 Ask:
 
-> What is tree shaking, why is it generally more reliable with ES Modules than CommonJS, and can it apply to a package from `node_modules`?
+> What is tree shaking, and why is it generally more reliable with ES Modules than CommonJS? What does "static" mean in this context, can tree shaking apply to packages from `node_modules`, and how can top-level side effects limit what gets removed?
 
 A complete answer should cover:
 
 - tree shaking omits exports or code that the build can prove are unreachable
-- static ESM imports and exports are easier to analyze before execution
+- static ESM syntax makes the module path and requested bindings visible for analysis without executing the program
 - dynamic CommonJS `require()` and mutable exports can make reliable analysis harder
 - third-party ESM dependencies are part of the same graph and can be tree-shaken when their structure and side-effect declarations permit it
 - installing a whole package does not mean the whole package must appear in production output
+- a side effect is observable work performed when a module is evaluated, such as registration, global mutation, an event listener, analytics initialization, or global CSS loading
+- side-effectful top-level work must be preserved unless the bundler can prove it is safe to remove
+- package metadata such as `"sideEffects": false` or a list of side-effectful files helps compatible tools decide whether an otherwise unused module must still be evaluated
 - some internal helpers and side-effectful code may still be required; tree shaking is not a promise that every unused-looking line disappears
 
 Use `lodash-es` named imports as the concrete package example if clarification is needed.
@@ -139,24 +145,49 @@ A complete answer should cover:
 
 Ask:
 
-> Explain the roles of a package manager, Vite, a lower-level tool such as Rollup or esbuild, and the browser. What ultimately has to be produced for the application to run?
+> Explain the roles of a package manager, Vite, a lower-level tool such as Rollup or esbuild, and the browser. What does the package manager resolve beyond the dependencies we list directly, how does Vite relate to lower-level processing, and what complete output must ultimately be produced for the application to run?
 
 A complete answer should cover:
 
-- a package manager records, installs, and resolves project dependencies and scripts; it is not itself the bundler
-- Vite is a higher-level frontend build tool that coordinates a development server and production build workflow
+- a package manager records direct dependencies, resolves and installs their transitive dependency graph, records the exact resolution in a lockfile, and runs project scripts; it is not itself the bundler
+- compatible package requirements may be deduplicated, while incompatible version ranges can result in multiple installed versions; transitive dependencies are not the same concept as circular dependencies
+- Vite is a higher-level frontend build tool that coordinates a development server and a complete production workflow across HTML, JavaScript, CSS, and assets
+- Vite provides the developer-facing workflow while coordinating specialized lower-level processors and plugins; it does not need to personally implement every operation
 - lower-level tools can perform overlapping jobs such as transformation, graph linking, bundling, code splitting, tree shaking, or minification depending on the tool and configuration
+- syntax transformation by these tools does not automatically polyfill missing browser APIs
 - raw Rollup or esbuild usage may need extra configuration or plugins to produce and connect HTML, CSS, assets, and JavaScript as a complete site
 - the browser does not run npm, Vite, Rollup, or esbuild
 - the final contract is standard browser-consumable HTML, CSS, JavaScript chunks, and referenced assets served over HTTP
 
 ## Course Completion
 
-After the learner answers Question 9 and receives feedback, briefly summarize two or three things they explained especially well. Then show this as a top-level Markdown heading exactly once:
+After the learner answers Question 9 and receives feedback, show this as a top-level Markdown heading exactly once:
 
 # Congratulations! You completed From Script Tags to Bundlers.
 
 Follow it with a short closing paragraph: the learner began with one HTML file and one JavaScript file, then uncovered why modules and build tools exist and how source becomes browser-facing output. Do not introduce another required checkpoint.
+
+Then give a short evidence-based evaluation using words rather than percentages. Use one of these overall levels:
+
+- **Strong understanding:** the learner independently explained most core mechanisms and their relationships; remaining gaps were refinements rather than foundational misconceptions.
+- **Solid understanding:** the main pipeline is clear, but several important distinctions needed prompting or correction.
+- **Developing understanding:** multiple foundational relationships remain unclear and should be revisited with another concrete experiment.
+
+Use this compact structure:
+
+```md
+**Overall understanding: [Strong / Solid / Developing]**
+
+**Explained confidently:** [two or three specific concepts]
+
+**Worth revisiting:**
+- [topic from an incomplete, incorrect, or absent answer]: [the specific idea that was missing]
+- [repeat for every topic that needs review, or write "No major gaps observed"]
+
+**Corrected during the discussion:** [important misconception now clarified, or omit this line]
+```
+
+Base the evaluation on what the learner initially explained and any answers to follow-up questions, not on information the agent supplied itself. Under **Worth revisiting**, include every question topic whose initial answer was incomplete, incorrect, or absent, but consolidate repeated gaps into one clear item. Briefly say what needs review instead of writing only a question number or broad label. Keep the tone encouraging but accurate. Do not call an answer weak merely because it used different terminology, and do not repeat the full feedback already given after every question.
 
 Finally, offer these optional next directions without pressuring the learner to choose immediately:
 

@@ -40,6 +40,75 @@ math[operation](2, 3);
 
 Here the used property may not be known until execution. Modern tools can optimize some simple CommonJS patterns, but support is tool-specific and must be conservative when the code is dynamic. Static ESM syntax made reliable cross-file tree shaking a normal production-build capability.
 
+Clarify what **static** means here. It does not mean that the imported value can never change. It means the dependency and requested binding are visible in the source syntax without executing the program:
+
+```js
+import { formatDate } from "./tools.js";
+```
+
+The bundler can identify `./tools.js` and its `formatDate` export while building the graph. Compare that with a runtime-dependent access pattern:
+
+```js
+import * as tools from "./tools.js";
+
+tools[getToolName()]();
+```
+
+This is still ESM, but the selected export is not known until runtime, so the bundler may need to keep every export that could match. ESM provides an analyzable structure; code still has to use that structure in a sufficiently explicit way.
+
+## Why Side Effects Limit Removal
+
+Define a **side effect** as observable work performed when a module is evaluated, rather than when one of its exported functions is later called. Contrast these modules:
+
+```js
+// math.js: declarations only; unused exports are easy to remove
+export function add(a, b) {
+  return a + b;
+}
+
+export function multiply(a, b) {
+  return a * b;
+}
+```
+
+```js
+// register-elements.js: loading the module changes the application
+customElements.define("fancy-button", FancyButton);
+
+export function getRegisteredName() {
+  return "fancy-button";
+}
+```
+
+An application may intentionally load the second module only for its top-level work:
+
+```js
+import "./register-elements.js";
+```
+
+There is no imported value, but removing the module would stop the custom element registration. Other common top-level side effects include changing `window`, adding an event listener, starting analytics, or importing global CSS. A bundler may still remove unrelated unused exports, but it must preserve observable work unless it can prove that doing so is safe.
+
+Explain that packages can provide side-effect metadata as a promise to compatible build tools:
+
+```json
+{
+  "sideEffects": false
+}
+```
+
+This says that unused modules in the package do not need to run merely for top-level effects and can be omitted when none of their exports are reachable. A package with a few intentional side-effect files can identify them instead:
+
+```json
+{
+  "sideEffects": [
+    "./register-elements.js",
+    "./styles.css"
+  ]
+}
+```
+
+This metadata must be accurate. Incorrectly declaring a registration or CSS module side-effect-free can let a build remove behavior the application relies on. It assists tree shaking, but it does not replace the bundler's dependency and reachability analysis.
+
 ## The Same Analysis Applies to Third-Party Packages
 
 Make clear that the dependency graph does not stop at our own files. When application code imports a package, the bundler follows that package into `node_modules` and analyzes reachable code when its format and side-effect information allow it.
