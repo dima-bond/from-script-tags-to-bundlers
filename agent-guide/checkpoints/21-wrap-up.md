@@ -168,16 +168,4 @@ HTML + CSS + one JS file
   -> output chunks
 ```
 
-Finish by asking the learner to explain, in their own words:
-
-1. Why native ES Modules are useful even without a bundler.
-2. Why production projects still use build tools when browsers understand ESM.
-3. Why a source module, installed package, bundle, and output chunk are not the same thing.
-
-Ask which path the learner wants next:
-
-- TypeScript and transpilation
-- CSS imports and asset handling
-- minification and source maps
-- a deeper tree-shaking experiment
-- CommonJS versus ESM in Node.js
+Do not finish the course yet. Tell the learner that the next and final checkpoint is an interactive knowledge check covering the complete journey. Ask whether they are ready, wait for their answer, and only then open [Checkpoint 22](22-final-knowledge-check.md).

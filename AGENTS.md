@@ -79,3 +79,4 @@ This is not a mistake. CSS is already separate only to keep the HTML readable; l
 19. [Optional: Compare esbuild Directly](agent-guide/checkpoints/19-esbuild-comparison.md)
 20. [Optional: Compare Rollup Historically](agent-guide/checkpoints/20-rollup-comparison.md)
 21. [Wrap Up](agent-guide/checkpoints/21-wrap-up.md)
+22. [Final Knowledge Check](agent-guide/checkpoints/22-final-knowledge-check.md)

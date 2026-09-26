@@ -37,6 +37,7 @@ The point is to feel the pressure that eventually makes a bundler useful.
 - what changes when a project adopts Vite
 - how source files and installed packages become browser-facing output chunks
 - how Vite, webpack, Rollup, esbuild, and related tools overlap
+- how well you can explain the complete pipeline in a final interactive knowledge check
 
 ## Current State
 
